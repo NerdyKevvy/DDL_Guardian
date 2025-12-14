@@ -34,7 +34,7 @@ creds_dict = json.loads(st.secrets["credentials_json"])
 flow = Flow.from_client_config(
     {"installed": creds_dict["installed"]},
     scopes=SCOPES,
-redirect_uri = f"https://{st.runtime.get_url()}/"
+redirect_uri = "https://ddlguardian-bykevinli.streamlit.app/"
 )
 
 session_state = st.session_state
