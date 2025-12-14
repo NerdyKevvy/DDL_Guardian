@@ -30,11 +30,22 @@ if "credentials_json" not in st.secrets:
 
 creds_dict = json.loads(st.secrets["credentials_json"])
 
-# OAuth 流程（云端友好版）
+# OAuth 流程 (兼容 Web 应用类型凭证)
+raw_creds = json.loads(st.secrets["credentials_json"])
+
+# 自动适配不同类型的凭证结构
+if "installed" in raw_creds:
+    client_config = raw_creds  # 桌面应用类型
+elif "web" in raw_creds:
+    client_config = raw_creds  # Web 应用类型，有 web 键
+else:
+    # Web 应用有时是平级结构，直接包裹成 web
+    client_config = {"web": raw_creds}
+
 flow = Flow.from_client_config(
-    {"installed": creds_dict["installed"]},
+    client_config,
     scopes=SCOPES,
-redirect_uri = "https://ddlguardian-bykevinli.streamlit.app/"
+    redirect_uri="https://ddlguardian-bykevinli.streamlit.app/"
 )
 
 session_state = st.session_state
